@@ -9,6 +9,7 @@ import (
 	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/pdxjohnny/go-json-rest-middleware-jwt"
 
+	dbVariables "github.com/pdxjohnny/s-db/db/variables"
 	"github.com/pdxjohnny/s/token"
 	"github.com/pdxjohnny/s/variables"
 )
@@ -54,9 +55,9 @@ func MakeHandler() *http.Handler {
 	}
 	api.Use(rest.DefaultProdStack...)
 	router, err := rest.MakeRouter(
-		rest.Get("/:collection/:id", GetDoc),
-		rest.Get("/:collection/:id/:value", GetSaveDoc),
-		rest.Post("/:collection/:id", PostSaveDoc),
+		rest.Get(dbVariables.APIPathGetServer, GetDoc),
+		rest.Get(dbVariables.APIPathGetSaveServer, GetSaveDoc),
+		rest.Post(dbVariables.APIPathSaveServer, PostSaveDoc),
 	)
 	if err != nil {
 		log.Fatal(err)
