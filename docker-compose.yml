@@ -1,0 +1,11 @@
+service:
+  build: .
+  command: /app/run http
+  ports:
+    - "8080:8080"
+  environment:
+    - "ENABLE_AUTH=false"
+  links:
+    - mongo
+mongo:
+  image: mongo
