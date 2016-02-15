@@ -55,9 +55,15 @@ func MakeHandler() *http.Handler {
 	}
 	api.Use(rest.DefaultProdStack...)
 	router, err := rest.MakeRouter(
+		// Near
+		rest.Post(dbVariables.APIPathNearServer, PostNear),
+		// Get
 		rest.Get(dbVariables.APIPathGetServer, GetDoc),
+		// Save
 		rest.Get(dbVariables.APIPathGetSaveServer, GetSaveDoc),
 		rest.Post(dbVariables.APIPathSaveServer, PostSaveDoc),
+		// Index
+		rest.Get(dbVariables.APIPathIndexServer, GetIndex),
 	)
 	if err != nil {
 		log.Fatal(err)

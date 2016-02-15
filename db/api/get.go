@@ -16,7 +16,7 @@ func GetDoc(w rest.ResponseWriter, r *rest.Request) {
 	collection := r.PathParam("collection")
 	doc, err := get.Get(collection, id)
 	if err != nil {
-		rest.Error(w, "Not Found", 404)
+		rest.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

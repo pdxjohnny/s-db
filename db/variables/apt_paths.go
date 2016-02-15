@@ -13,4 +13,12 @@ const (
 	APIPathSaveServer = "/:collection/:id"
 	// APIPathSave makes a post request to save a document
 	APIPathSave = "/api" + APIPathSaveServer
+	// APIPathIndexServer is the path under API
+	APIPathIndexServer = "/index/:collection/:key/:indexType"
+	// APIPathIndex creates an index on a collection
+	APIPathIndex = "/api" + APIPathIndexServer
+	// APIPathNearServer is the path under API
+	APIPathNearServer = "/near/:collection"
+	// APIPathNear makes a geospacial query
+	APIPathNear = "/api" + APIPathNearServer
 )
