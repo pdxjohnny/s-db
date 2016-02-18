@@ -2,6 +2,7 @@ package save
 
 import (
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/pdxjohnny/s-db/db/shared"
@@ -11,17 +12,33 @@ import (
 )
 
 // Save tries to insert then tries to save
-func Save(collectionName string, doc interface{}) error {
+func Save(collectionName string, doc interface{}) (interface{}, error) {
 	connection := shared.Connection()
 	if connection == nil {
 		log.Println("MongoConn", connection)
-		return errors.New("No connection to database server")
+		return nil, errors.New("No connection to database server")
 	}
-	err := Insert(collectionName, doc)
-	if err == nil {
-		return nil
+	collection := connection.DB(variables.DBName).C(collectionName)
+
+	var asMap map[string]interface{}
+	switch value := doc.(type) {
+	case *map[string]interface{}:
+		asMap = *(value)
+	case map[string]interface{}:
+		asMap = value
+	default:
+		return nil, errors.New("Must be a map")
 	}
-	return Update(collectionName, doc)
+
+	id, ok := asMap["_id"]
+	if !ok {
+		id = bson.NewObjectId()
+		asMap["_id"] = id
+	} else {
+		asMap["_id"] = bson.ObjectIdHex(id.(string))
+	}
+	fmt.Println("Saving", collectionName, doc)
+	return collection.UpsertId(asMap["_id"], doc)
 }
 
 // Insert creates a document
@@ -60,7 +77,7 @@ func Update(collectionName string, doc interface{}) error {
 	if !ok {
 		return errors.New("Doc needs to have _id to be saved")
 	}
-	findDoc := bson.M{"_id": asMap["_id"]}
+	findDoc := bson.M{"_id": asMap["_id"].(string)}
 
 	collection := connection.DB(variables.DBName).C(collectionName)
 	err := collection.Update(findDoc, doc)

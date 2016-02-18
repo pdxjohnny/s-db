@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/ant0ine/go-json-rest/rest"
@@ -48,6 +47,5 @@ func PostNear(w rest.ResponseWriter, r *rest.Request) {
 		w.(http.ResponseWriter).Write(restQuickReply.BlankResponse)
 		return
 	}
-	fmt.Println(doc)
 	w.WriteJson(doc)
 }

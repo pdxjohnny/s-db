@@ -1,14 +1,12 @@
 package api
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/ant0ine/go-json-rest/rest"
 
 	"github.com/pdxjohnny/s-db/db/save"
-	"github.com/pdxjohnny/s/restQuickReply"
 )
 
 // GetSaveDoc uses save to save a document
@@ -31,15 +29,13 @@ func GetSaveDoc(w rest.ResponseWriter, r *rest.Request) {
 		"_id": id,
 		id:    value,
 	}
-	fmt.Println(doc)
-	err := save.Save(collection, doc)
+	info, err := save.Save(collection, doc)
 	if err != nil {
 		log.Println(err)
 		rest.Error(w, "Could not save", http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
-	w.(http.ResponseWriter).Write(restQuickReply.BlankResponse)
+	w.WriteJson(info)
 }
 
 // PostSaveDoc uses save to save a document
@@ -66,13 +62,11 @@ func PostSaveDoc(w rest.ResponseWriter, r *rest.Request) {
 	if id != "undefined" {
 		doc["_id"] = id
 	}
-	fmt.Println(doc)
-	err = save.Save(collection, doc)
+	info, err := save.Save(collection, doc)
 	if err != nil {
 		log.Println(err)
 		rest.Error(w, "Could not save", http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
-	w.(http.ResponseWriter).Write(restQuickReply.BlankResponse)
+	w.WriteJson(info)
 }

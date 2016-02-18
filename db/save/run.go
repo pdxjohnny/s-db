@@ -21,9 +21,10 @@ func Run() {
 			log.Println(err)
 			return
 		}
-		err = Save(viper.GetString("collection"), &doc)
+		info, err := Save(viper.GetString("collection"), &doc)
 		if err != nil {
 			log.Println(err)
 		}
+		log.Println(info)
 	}
 }
