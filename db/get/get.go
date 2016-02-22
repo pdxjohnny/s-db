@@ -17,6 +17,9 @@ func Get(collectionName, id string) (*map[string]interface{}, error) {
 	}
 	var result map[string]interface{}
 	collection := connection.DB(variables.DBName).C(collectionName)
+	if !bson.IsObjectIdHex(id) {
+		return nil, errors.New("Invalid id: " + id)
+	}
 	err := collection.FindId(bson.ObjectIdHex(id)).One(&result)
 	if err != nil {
 		return nil, err
